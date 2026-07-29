@@ -1,12 +1,3 @@
-# Dependencies
 node_modules/
 **/node_modules/
 
-# Production / Build
-dist/
-dist-ssr/
-**/dist/
-
-# System / OS
-.DS_Store
-*.local
