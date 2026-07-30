@@ -1,0 +1,22 @@
+.nav a {
+    color: red;
+    text-decoration: none;
+}
+.nav a:hover {
+    color: rgb(195, 0, 255);
+    text-decoration: none;
+}
+
+.nav {
+    display: flex;
+    /* align-items: center; */
+    justify-content: right;
+    gap: 2rem;
+    background-color: rgb(229, 217, 165);
+    border-radius: 25px;
+}
+.nav:hover{
+    display: flex;
+    
+    background-color: rgb(254, 183, 92);
+}
