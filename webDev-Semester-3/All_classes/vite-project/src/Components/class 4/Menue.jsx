@@ -1,6 +1,6 @@
 import React from 'react'
 import Pizza from './Pizza'
-import Burger from './Burger'
+import Burger from './class 3/Burger'
 import { Link,  Route, Routes } from 'react-router-dom'
 const Menue = () => {
   return (

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, Routes, Route } from 'react-router-dom'
-import Productinfo from './Productinfo';
+import Productinfo from './class4/Productinfo';
 import { useNavigate } from 'react-router-dom';
 const ProductList = () => {
   let navi=useNavigate();
