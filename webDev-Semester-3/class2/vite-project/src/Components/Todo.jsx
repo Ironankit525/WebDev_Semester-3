@@ -29,6 +29,8 @@ const Todo = () => {
           <li key={index}>{todo}</li>
         ))}
       </ul>
+
+      
     </div>
   );
 };
