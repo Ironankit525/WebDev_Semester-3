@@ -1,0 +1,21 @@
+.card{
+    height: 300px;
+    width: 250px;
+    background-color: rgb(155, 170, 170);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 25px;
+
+
+}
+.info{
+    justify-content: center;
+    align-items: center;
+   
+}
+.img{
+    height: 125px;
+    width: 125px;
+    border-radius: 25px;
+}
