@@ -1,4 +1,4 @@
-import React, { useReducer } from 'react';
+import React, { useReducer } from "react";
 
 const data = {
   input: "",
@@ -6,23 +6,31 @@ const data = {
 };
 
 function reducer(state, action) {
-  switch (action.type) {
-    case "inp":
-      return {
-        ...state,
-        input: action.payload
-      };
-
-    case "add":
-      return {
-        ...state,
-        list: [...state.list, state.input],
-        input: ""
-      };
-
-    default:
-      return state;
+  if (action.type === "inp") {
+    return {
+      ...state,
+      input: action.payload
+    };
   }
+
+  else if (action.type === "add") {
+    if (state.input.trim() === "") return state;
+
+    return {
+      ...state,
+      list: [...state.list, state.input],
+      input: ""
+    };
+  }
+
+  else if (action.type === "delete") {
+    return {
+      ...state,
+      list: state.list.filter((_, index) => index !== action.payload)
+    };
+  }
+
+  return state;
 }
 
 const Todo_useresuser = () => {
@@ -33,7 +41,10 @@ const Todo_useresuser = () => {
       <input
         value={state.input}
         onChange={(e) =>
-          dispatch({ type: "inp", payload: e.target.value })
+          dispatch({
+            type: "inp",
+            payload: e.target.value
+          })
         }
       />
 
@@ -43,7 +54,18 @@ const Todo_useresuser = () => {
 
       <ul>
         {state.list.map((item, index) => (
-          <li key={index}>{item}</li>
+          <li
+            key={index}
+            onClick={() =>
+              dispatch({
+                type: "delete",
+                payload: index
+              })
+            }
+           
+          >
+            {item}
+          </li>
         ))}
       </ul>
     </div>
