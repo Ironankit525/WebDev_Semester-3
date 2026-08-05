@@ -12,7 +12,7 @@ function reduser(state, action) {
   }
 }
 const Usereduser = () => {
-  const [state, dispatch] = useReducer(reduser, 0);
+  const [state, dispatch] = useReducer(reduser, 0);//hola
   return (
     <div>
       <h1>{state}</h1>
