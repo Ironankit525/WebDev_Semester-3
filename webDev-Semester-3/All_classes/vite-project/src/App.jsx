@@ -1,14 +1,12 @@
 import React from 'react'
-
-import Todo_useresuser from './Components/class 5/Todo_useresuser'
-import Memodemo from './Components/class 6/Memodemo'
+import Zomato from './Components/class 7/Zomato'
 
 
 const App = () => {
   
   return (<>
    
-    <Memodemo/>
+    <Zomato/>
     </>
   )
 }

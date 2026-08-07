@@ -1,0 +1,14 @@
+.pro{
+    display: flex;
+    align-items: center;
+    background-color:rgb(128, 127, 127);
+    border-radius: 10px;
+    margin: 5px;
+   
+    
+}
+p{
+    color: red;
+    font-size: larger;
+
+}
