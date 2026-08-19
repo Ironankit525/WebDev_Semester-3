@@ -65,42 +65,130 @@
 
 
 
-let express=require('express')
+// let express=require('express')
+
+// let app=express()
+// app.use(express.json())
+
+
+// app.get('/',(req,res)=>{
+//     res.send("hello")
+// })
+
+// app.get('/new',(req,res)=>{
+//     res.send("new")
+// })
+// app.get('/new/:id',(req,res)=>{
+//     let {id}=req.params
+
+//     res.send(id)
+// })
+
+
+// app.get('/search',(req,res)=>{
+//     console.log(req.query)
+
+//     res.send("search")
+// })
+
+// app.post('/body',(req,res)=>{
+//     console.log(req.body)
+
+//     res.send("search")
+// })
+
+
+// app.listen(3000,(req,res)=>{
+//     console.log("server...... is running")
+// })
+
+
+
+let express= require('express')
 
 let app=express()
+app.use(express.json())
 
-
+const products = [
+  {
+    id: 1,
+    brand: "Samsung",
+    name: "Galaxy S26 Ultra",
+    price: 144999,
+    category: "Smartphone",
+    inStock: true
+  },
+  {
+    id: 2,
+    brand: "Apple",
+    name: "iPhone 17 Pro Max",
+    price: 163490,
+    category: "Smartphone",
+    inStock: false
+  },
+  {
+    id: 3,
+    brand: "vivo",
+    name: "X300 Ultra",
+    price: 139999,
+    category: "Smartphone",
+    inStock: true
+  },
+  {
+    id: 4,
+    brand: "OnePlus",
+    name: "15",
+    price: 85999,
+    category: "Smartphone",
+    inStock: true
+  },
+  {
+    id: 5,
+    brand: "Motorola",
+    name: "Edge 70 Fusion",
+    price: 34340,
+    category: "Smartphone",
+    inStock: true
+  }
+];
 
 app.get('/',(req,res)=>{
-    res.send("hello")
+        res.json(products)
 })
 
-app.get('/new',(req,res)=>{
-    res.send("new")
+app.get("/products/:id",(req,res)=>{
+    let{id}=req.params
+    let data=products.find((a)=>{
+       return a.id===Number(id)
+    })
+    console.log(id)
 })
-app.get('/new/:id',(req,res)=>{
-    let {id}=req.params
-
-    res.send(id)
-})
-
 
 app.get('/search',(req,res)=>{
-    console.log(req.query)
+   let {category}=req.query
+   
+    
+      let data=   products.filter((a)=>{
+            return a.category==category
+         })
+         
+         if(!data){
+            return res.status(404).json({msg:"no data"})
 
-    res.send("search")
+         }
+         res.status(200).json({msg:data})
+         
+   
+
 })
 
-app.post('/body',(req,res)=>{
-    console.log(req.body)
 
-    res.send("search")
-})
+app.put('/add',(req,res)=>{
 
-
-app.listen(3000,(req,res)=>{
-    console.log("server...... is running")
 })
 
 
 
+app.listen(3000,()=>{
+    console.log("server.... is running")
+})
