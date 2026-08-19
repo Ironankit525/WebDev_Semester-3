@@ -36,29 +36,71 @@
 // })
 
 
+// let express=require('express')
+
+// let app=express()
+
+// app.use((req,res,next)=>{
+//     console.log("1 middleware allow ")
+//     next()
+// })
+
+// app.use((req,res,next)=>{
+//     console.log(' 2 middleware do not allow ')
+//     next()
+    
+
+// })
+// app.get('/',(req,res)=>{
+//  res.send("hello server")
+// })
+
+// app.post('/',(req,res)=>{
+//  res.send("post server")
+// })
+
+// app.listen(3000,()=>{
+//     console.log("server is running ..")
+// })
+
+
+
 let express=require('express')
 
 let app=express()
 
-app.use((req,res,next)=>{
-    console.log("1 middleware allow ")
-    next()
-})
 
-app.use((req,res,next)=>{
-    console.log(' 2 middleware do not allow ')
-    next()
-    
 
-})
 app.get('/',(req,res)=>{
- res.send("hello server")
+    res.send("hello")
 })
 
-app.post('/',(req,res)=>{
- res.send("post server")
+app.get('/new',(req,res)=>{
+    res.send("new")
+})
+app.get('/new/:id',(req,res)=>{
+    let {id}=req.params
+
+    res.send(id)
 })
 
-app.listen(3000,()=>{
-    console.log("server is running ..")
+
+app.get('/search',(req,res)=>{
+    console.log(req.query)
+
+    res.send("search")
 })
+
+app.post('/body',(req,res)=>{
+    console.log(req.body)
+
+    res.send("search")
+})
+
+
+app.listen(3000,(req,res)=>{
+    console.log("server...... is running")
+})
+
+
+
