@@ -154,7 +154,7 @@ const products = [
 
 app.get('/',(req,res)=>{
         res.json(products)
-// })dljf
+})
 
 app.get("/products/:id",(req,res)=>{
     let{id}=req.params
