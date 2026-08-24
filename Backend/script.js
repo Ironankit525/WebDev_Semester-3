@@ -105,9 +105,10 @@
 
 
 let express= require('express')
-
+let cors=require('cors')
 let app=express()
 app.use(express.json())
+app.use(cors())
 
 const products = [
   {
@@ -192,4 +193,3 @@ app.put('/add',(req,res)=>{
 app.listen(3000,()=>{
     console.log("server.... is running")
 })
-// heloo

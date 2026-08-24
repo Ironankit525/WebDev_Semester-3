@@ -1,12 +1,18 @@
 import React from 'react'
-import Zomato from './Components/class 7/Zomato'
 
 
+import { useEffect } from 'react'
 const App = () => {
+  useEffect(()=>{
+    fetch("http://localhost:3000/").then((res)=>{
+      return res.json()
+    }).then((data)=>{
+      console.log(data);
+    })
+  },[])
   
   return (<>
-   
-    <Zomato/>
+    
     </>
   )
 }
