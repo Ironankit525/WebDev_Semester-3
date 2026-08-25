@@ -198,21 +198,65 @@
 
 let express = require('express')
 let app=express()
+const bcryptjs = require("bcryptjs")
+const User = require("./DB/db");
 app.use(express.json())
 let mongooes=require('mongoose')
 mongooes.connect("mongodb+srv://aka_ankit:ankit5706@cluster0.vqn6mtv.mongodb.net/vedam").then(()=>{
   console.log("db connected ........")
 })
-app.post('/',(req,res)=>{
-  let{name,email,password}=req.body
+
+app.post('/',async(req,res)=>{
+   let {name,email,passWord}=req.body
+
+ let UserData=  new User({
+      name,email,passWord
+   })
+     await UserData.save()
+     res.send("doneeee")
 
 
-  .
+   // console.log(name,email,passWord);
+   
 
-  
 })
 
 
+app.post("/signUp", async(req,res)=>{
+   let {name,email,passWord}=req.body
+  let findData=   await User.findOne({email})
+  console.log(findData,"hjehehe");
+  
+  if(findData){
+   return res.send("user jinda haii....")
+  }else{
+     let updateddP=   await bcryptjs.hash(passWord,10)
+     console.log(updateddP,"dekhoooooo");
+     
+ let UserInfo=  new User({
+      name,email,
+      passWord:updateddP
+
+   })
+      await UserInfo.save()
+      res.send("done.......")
+  }
+
+
+})
+
+app.post("/signin", async(req,res)=>{
+   let {name,email,passWord}=req.body
+  let findData=   await User.findOne({name,email,passWord})
+ 
+  
+  if(findData){
+   return res.send("loged in...")
+  }else{
+     
+     return res.send("Make an account first");
+     
+ }})
 
 
 app.listen(3000,()=>{
