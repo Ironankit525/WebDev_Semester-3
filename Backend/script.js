@@ -104,92 +104,117 @@
 
 
 
-let express= require('express')
-let cors=require('cors')
-let app=express()
-app.use(express.json())
-app.use(cors())
+// let express= require('express')
+// let cors=require('cors')
+// let app=express()
+// app.use(express.json())
+// app.use(cors())
 
-const products = [
-  {
-    id: 1,
-    brand: "Samsung",
-    name: "Galaxy S26 Ultra",
-    price: 144999,
-    category: "Smartphone",
-    inStock: true
-  },
-  {
-    id: 2,
-    brand: "Apple",
-    name: "iPhone 17 Pro Max",
-    price: 163490,
-    category: "Smartphone",
-    inStock: false
-  },
-  {
-    id: 3,
-    brand: "vivo",
-    name: "X300 Ultra",
-    price: 139999,
-    category: "Smartphone",
-    inStock: true
-  },
-  {
-    id: 4,
-    brand: "OnePlus",
-    name: "15",
-    price: 85999,
-    category: "Smartphone",
-    inStock: true
-  },
-  {
-    id: 5,
-    brand: "Motorola",
-    name: "Edge 70 Fusion",
-    price: 34340,
-    category: "Smartphone",
-    inStock: true
-  }
-];
+// const products = [
+//   {
+//     id: 1,
+//     brand: "Samsung",
+//     name: "Galaxy S26 Ultra",
+//     price: 144999,
+//     category: "Smartphone",
+//     inStock: true
+//   },
+//   {
+//     id: 2,
+//     brand: "Apple",
+//     name: "iPhone 17 Pro Max",
+//     price: 163490,
+//     category: "Smartphone",
+//     inStock: false
+//   },
+//   {
+//     id: 3,
+//     brand: "vivo",
+//     name: "X300 Ultra",
+//     price: 139999,
+//     category: "Smartphone",
+//     inStock: true
+//   },
+//   {
+//     id: 4,
+//     brand: "OnePlus",
+//     name: "15",
+//     price: 85999,
+//     category: "Smartphone",
+//     inStock: true
+//   },
+//   {
+//     id: 5,
+//     brand: "Motorola",
+//     name: "Edge 70 Fusion",
+//     price: 34340,
+//     category: "Smartphone",
+//     inStock: true
+//   }
+// ];
 
-app.get('/',(req,res)=>{
-        res.json(products)
-})
+// app.get('/',(req,res)=>{
+//         res.json(products)
+// })
 
-app.get("/products/:id",(req,res)=>{
-    let{id}=req.params
-    let data=products.find((a)=>{
-       return a.id===Number(id)
-    })
-    console.log(id)
-})
+// app.get("/products/:id",(req,res)=>{
+//     let{id}=req.params
+//     let data=products.find((a)=>{
+//        return a.id===Number(id)
+//     })
+//     console.log(id)
+// })
 
-app.get('/search',(req,res)=>{
-   let {category}=req.query
+// app.get('/search',(req,res)=>{
+//    let {category}=req.query
    
     
-      let data=   products.filter((a)=>{
-            return a.category==category
-         })
+//       let data=   products.filter((a)=>{
+//             return a.category==category
+//          })
          
-         if(!data){
-            return res.status(404).json({msg:"no data"})
+//          if(!data){
+//             return res.status(404).json({msg:"no data"})
 
-         }
-         res.status(200).json({msg:data})
+//          }
+//          res.status(200).json({msg:data})
          
    
 
+// })
+
+
+// app.put('/add',(req,res)=>{
+
+// })
+
+
+
+// app.listen(3000,()=>{
+//     console.log("server.... is running")
+// })
+
+
+
+let express = require('express')
+let app=express()
+app.use(express.json())
+let mongooes=require('mongoose')
+mongooes.connect("mongodb+srv://aka_ankit:ankit5706@cluster0.vqn6mtv.mongodb.net/vedam").then(()=>{
+  console.log("db connected ........")
+})
+app.post('/',(req,res)=>{
+  let{name,email,password}=req.body
+
+
+  
+
+  
 })
 
-
-app.put('/add',(req,res)=>{
-
-})
 
 
 
 app.listen(3000,()=>{
-    console.log("server.... is running")
+  console.log("server is runnung ")
 })

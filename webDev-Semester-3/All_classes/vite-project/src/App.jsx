@@ -24,8 +24,8 @@ const App = () => {
       apidata.map((val)=>{
         return(<>
         <div key={val.id}>
-            <h1>ID: {val.id}</h1>
-            <h1>Brand: {val.brand}</h1>
+            <h1 className="text-3xl font-bold text-blue-500">ID: {val.id}</h1>
+            <h1 className='text-4xl'>Brand: {val.brand}</h1>
             <h1>Name: {val.name}</h1>
             <h1>price: {val.price}</h1>
           </div>
