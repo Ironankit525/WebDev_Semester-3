@@ -207,7 +207,7 @@ app.post('/',(req,res)=>{
   let{name,email,password}=req.body
 
 
-  
+  .
 
   
 })
