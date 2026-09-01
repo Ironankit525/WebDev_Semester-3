@@ -247,16 +247,20 @@ app.post("/signUp", async(req,res)=>{
 
 app.post("/signin", async(req,res)=>{
    let {name,email,passWord}=req.body
-  let findData=   await User.findOne({name,email,passWord})
+
+   
+  let findData=   await User.findOne({email})
  
-  
-  if(findData){
-   return res.send("loged in...")
+  let validp=await bcryptjs.compare(passWord,findData.passWord)
+ 
+
+  if(!validp ){
+   return res.send("kuch to gadbad hai daya ")
   }else{
-     
-     return res.send("Make an account first");
-     
- }})
+   return res.send("you are loged in bro ")
+  }
+  
+ })
 
 
 app.listen(3000,()=>{

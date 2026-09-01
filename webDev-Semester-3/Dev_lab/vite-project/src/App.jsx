@@ -1,9 +1,10 @@
 import React from 'react'
-import Sps from './components/Sps'
+import Login from './components/Login'
+
 const App = () => {
   return (
     <div>
-      <Sps/>
+      <Login/>
     </div>
   )
 }
