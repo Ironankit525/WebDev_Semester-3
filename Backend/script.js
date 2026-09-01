@@ -199,70 +199,82 @@
 let express = require('express')
 let app=express()
 const bcryptjs = require("bcryptjs")
+let jwt=require('jsonwebtoken')
 const User = require("./DB/db");
 app.use(express.json())
 let mongooes=require('mongoose')
-mongooes.connect("mongodb+srv://aka_ankit:ankit5706@cluster0.vqn6mtv.mongodb.net/vedam").then(()=>{
+mongooes.connect("mongodb+srv://aka_ankit:Ankit5706@cluster0.vqn6mtv.mongodb.net/vedam").then(()=>{
   console.log("db connected ........")
 })
 
-app.post('/',async(req,res)=>{
-   let {name,email,passWord}=req.body
-
- let UserData=  new User({
-      name,email,passWord
-   })
-     await UserData.save()
-     res.send("doneeee")
-
-
-   // console.log(name,email,passWord);
-   
-
-})
 
 
 app.post("/signUp", async(req,res)=>{
-   let {name,email,passWord}=req.body
+   let {name,email,passWord ,role}=req.body
   let findData=   await User.findOne({email})
   console.log(findData,"hjehehe");
-  
   if(findData){
    return res.send("user jinda haii....")
   }else{
      let updateddP=   await bcryptjs.hash(passWord,10)
+
      console.log(updateddP,"dekhoooooo");
      
  let UserInfo=  new User({
       name,email,
-      passWord:updateddP
+      passWord:updateddP,
+      role:role||'user'
+   
 
    })
       await UserInfo.save()
       res.send("done.......")
   }
+})
 
+
+
+app.post('/login', async(req,res)=>{
+   let {email,passWord}=req.body
+
+ let findData=   await User.findOne({email})    
+ console.log(findData,"heheh");
+
+ let validP= await   bcryptjs.compare(passWord,findData.passWord)
+ if(!validP){
+   return res.send("wrong login cread")
+ }
+
+  let token=    jwt.sign({email:findData.email,role:findData.role},"hehehehehe")
+  console.log(token,"hehe");
+
+  
+
+
+ 
+ res.json({msg:"done",token:token})
+
+})
+let auth=(req,res,next)=>{
+   let token=req.headers.authorization;
+   console.log(token,"toeknn");
+   
+   if(!token){
+      return res.send("kaun hai app , app nahi hai idher ke ")
+   }
+  let decode=  jwt.verify(token,"token hai bhai")
+  console.log(decode,"isse");
+  next()
+}
+
+
+app.get("/api",auth,(req,res)=>{
+   res.send("api requst hai")
 
 })
 
-app.post("/signin", async(req,res)=>{
-   let {name,email,passWord}=req.body
-
-   
-  let findData=   await User.findOne({email})
  
-  let validp=await bcryptjs.compare(passWord,findData.passWord)
- 
-
-  if(!validp ){
-   return res.send("kuch to gadbad hai daya ")
-  }else{
-   return res.send("you are loged in bro ")
-  }
-  
- })
-
 
 app.listen(3000,()=>{
-  console.log("server is runnung ")
+  console.log("server is runnung ....... ")
 })
