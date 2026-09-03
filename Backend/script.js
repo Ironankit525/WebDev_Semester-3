@@ -272,7 +272,7 @@ let auth=(req,res,next)=>{
 }
    
 let roleCheck=(role)=>{
-   return(req,res,next)=>{
+   return(req,res,next)=>{ 
       if(req.user.role!==role){
          return res.send("who the hell are you ")
       }
@@ -280,7 +280,7 @@ let roleCheck=(role)=>{
    }
 }
 
-app.get("/api",auth, roleCheck,(req,res)=>{
+app.get("/api",auth, roleCheck('admin'),(req,res)=>{
    res.send("api requst hai")
 
 })
