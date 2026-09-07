@@ -203,9 +203,16 @@ let jwt=require('jsonwebtoken')
 const User = require("./DB/db");
 app.use(express.json())
 let mongooes=require('mongoose')
-mongooes.connect("mongodb+srv://aka_ankit:Ankit5706@cluster0.vqn6mtv.mongodb.net/vedam").then(()=>{
+mongooes.connect("mongodb+srv://aka_ankit:ankit5706@cluster0.vqn6mtv.mongodb.net/vedam").then(()=>{
   console.log("db connected ........")
 })
+
+
+
+
+
+
+
 
 
 
@@ -285,6 +292,21 @@ app.get("/api",auth, roleCheck('admin'),(req,res)=>{
 
 })
 
+app.get('/me', auth, async (req, res) => {
+    console.log(req.user);
+    let uId = req.user.userId;
+    let findUser = await User.findOne({ uId })
+    console.log(findUser, 'heehe');
+
+    if (!findUser) res.status(404).json({ msg: "" })
+
+    res.json({
+        name: findUser.name,
+        email: findUser.email,
+        role: findUser.email
+    })
+
+})
    
 
 app.listen(3000,()=>{
