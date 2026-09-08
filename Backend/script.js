@@ -295,19 +295,18 @@ app.get("/api",auth, roleCheck('admin'),(req,res)=>{
 app.get('/me', auth, async (req, res) => {
     console.log(req.user);
     let uId = req.user.userId;
-    let findUser = await User.findOne({ uId })
+    let findUser = await User.find()
     console.log(findUser, 'heehe');
 
-    if (!findUser) res.status(404).json({ msg: "" })
+    if (!findUser) res.status(404).json({ msg: "user not found " })
 
-    res.json({
-        name: findUser.name,
-        email: findUser.email,
-        role: findUser.email
-    })
+    res.json(findUser)
 
 })
    
+
+
+
 
 app.listen(3000,()=>{
   console.log("server is runnung ....... ")

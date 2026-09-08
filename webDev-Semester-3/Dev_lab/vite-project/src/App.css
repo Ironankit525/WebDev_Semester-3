@@ -1,0 +1,8 @@
+.auth-page {
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: grid;
+  place-items: center;
+  padding: 32px 20px;
+  background: linear-gradient(135deg, #eef2ff, #f8fafc 55%, #e0f2fe);
+}
