@@ -209,13 +209,6 @@ mongooes.connect("mongodb+srv://aka_ankit:ankit5706@cluster0.vqn6mtv.mongodb.net
 
 
 
-
-
-
-
-
-
-
 app.post("/signUp", async(req,res)=>{
    let {name,email,passWord ,role}=req.body
   let findData=   await User.findOne({email})
@@ -249,7 +242,7 @@ app.post('/login', async(req,res)=>{
 
  let validP= await   bcryptjs.compare(passWord,findData.passWord)
  if(!validP){
-   return res.send("wrong login cread")
+   return res.send("kuch nhi ho payega aapse.....")
  }
 
   let token=    jwt.sign({email:findData.email,role:findData.role},"hehehehehe")
@@ -267,47 +260,52 @@ let auth=(req,res,next)=>{
    console.log(token,"toeknn");
    
    if(!token){
-      return res.send("kaun hai app , app nahi hai idher ke ")
+      return res.send("kaun hai app...")
    }
-  let decode=  jwt.verify(token,"token hai bhai")
+  let decode=  jwt.verify(token,"hehehehehe")
   console.log(decode,"isse");
-
-
-  req.user=decode;
+  req.user=decode
 
   next()
 }
-   
 let roleCheck=(role)=>{
-   return(req,res,next)=>{ 
+   return (req,res,next)=>{
       if(req.user.role!==role){
-         return res.send("who the hell are you ")
+         return res.send("who the hell are u...........")
       }
+      // console.log(req.user,"isko dekhoooo");
       next()
    }
 }
 
-app.get("/api",auth, roleCheck('admin'),(req,res)=>{
-   res.send("api requst hai")
+
+
+
+app.get("/api",auth, roleCheck("admin"),(req,res)=>{
+   res.send("heheh")
 
 })
-
-app.get('/me', auth, async (req, res) => {
-    console.log(req.user);
-    let uId = req.user.userId;
-    let findUser = await User.find()
-    console.log(findUser, 'heehe');
-
-    if (!findUser) res.status(404).json({ msg: "user not found " })
-
-    res.json(findUser)
+app.get('/admin',(req,res)=>{
+   res.send("mai hu adminnnnnn")
 
 })
-   
-
-
-
 
 app.listen(3000,()=>{
-  console.log("server is runnung ....... ")
+   console.log("server......");
+   
 })
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
