@@ -236,7 +236,6 @@ app.post("/signUp", async(req,res)=>{
 
 app.post('/login', async(req,res)=>{
    let {email,passWord}=req.body
-
  let findData=   await User.findOne({email})    
  console.log(findData,"heheh");
 
@@ -245,13 +244,10 @@ app.post('/login', async(req,res)=>{
    return res.send("kuch nhi ho payega aapse.....")
  }
 
-  let token=    jwt.sign({email:findData.email,role:findData.role},"hehehehehe")
+  let token=    jwt.sign({id:findData._id, email:findData.email,role:findData.role},"hehehehehe")
   console.log(token,"hehe");
 
   
-
-
- 
  res.json({msg:"done",token:token})
 
 })
@@ -277,18 +273,40 @@ let roleCheck=(role)=>{
       next()
    }
 }
-
-
-
-
-app.get("/api",auth, roleCheck("admin"),(req,res)=>{
-   res.send("heheh")
-
+app.get("/admin", auth,roleCheck("admin"),(req,res)=>{
+   res.send("hello only admin can acces me!")
 })
-app.get('/admin',(req,res)=>{
-   res.send("mai hu adminnnnnn")
 
-})
+
+
+app.post('/forgot-password', async (req, res) => {
+   const { email } = req.body;
+   try {
+     const user = await User.findOne({ email });
+     if (!user) {
+       return res.status(404).send('User not found');
+     }
+ 
+   
+     const resetToken = crypto.randomBytes(20).toString('hex');
+     user.resetToken = resetToken;
+     user.resetTokenExpiry = Date.now() + 3600000; 
+     await user.save();
+ 
+ 
+     const resetUrl = `${req.protocol}://${req.get('host')}/api/reset-password/${resetToken}`;
+     await sendEmail(
+       user.email,
+       'Password Reset Request',
+       `Click the link below to reset your password:\n\n${resetUrl}`
+     );
+ 
+     res.status(200).send('Password reset email sent');
+   } catch (error) {
+     res.status(500).send('Error sending password reset email: ' + error.message);
+   }
+ });
+ 
 
 app.listen(3000,()=>{
    console.log("server......");
