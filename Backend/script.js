@@ -308,10 +308,36 @@ app.post('/forgot-password', async (req, res) => {
  });
  
 
+ app.post('/reset-password/:token', async(req,res)=>{
+   let {newp}=req.body
+
+   let {token}=req.params
+
+   let user=await User.findOne({
+      resetToken:token,
+      resetTokenExpiry:{$gt: DataTransfer.now()}
+      
+   })
+   if(!user){
+      return res.send("invalid password")
+   }
+   else{
+      let updateddP=await bcryptjs.hash(newp,10)
+      user.password = updateddP;
+      user.resetToken = undefined;
+      user.resetTokenExpiry = undefined;
+      await user.save();
+
+      return res.send("Password updated successfully");
+
+   }
+ })
+
 app.listen(3000,()=>{
    console.log("server......");
    
 })
+
 
 
 
