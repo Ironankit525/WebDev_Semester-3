@@ -294,7 +294,7 @@ app.post('/forgot-password', async (req, res) => {
      await user.save();
  
  
-     const resetUrl = `${req.protocol}://${req.get('host')}/api/reset-password/${resetToken}`;
+     const resetUrl = `http://localhost:3000/reset-password/${resetToken}`;
      await sendEmail(
        user.email,
        'Password Reset Request',
@@ -332,6 +332,24 @@ app.post('/forgot-password', async (req, res) => {
 
    }
  })
+app.get('/error',(req,res)=>{
+
+ try{
+   let name=null;
+   console.log(name.user)
+   console.log("hello ")
+   res.send("hola")
+
+}
+catch(err){
+   res.send("kuch to gudbad hai bahi",err)
+
+}
+
+})
+
+
+
 
 app.listen(3000,()=>{
    console.log("server......");
