@@ -35,7 +35,6 @@
 //     // res.end("   hi broo ")
 // })
 
-
 // let express=require('express')
 
 // let app=express()
@@ -48,7 +47,6 @@
 // app.use((req,res,next)=>{
 //     console.log(' 2 middleware do not allow ')
 //     next()
-    
 
 // })
 // app.get('/',(req,res)=>{
@@ -63,13 +61,10 @@
 //     console.log("server is running ..")
 // })
 
-
-
 // let express=require('express')
 
 // let app=express()
 // app.use(express.json())
-
 
 // app.get('/',(req,res)=>{
 //     res.send("hello")
@@ -84,7 +79,6 @@
 //     res.send(id)
 // })
 
-
 // app.get('/search',(req,res)=>{
 //     console.log(req.query)
 
@@ -97,12 +91,9 @@
 //     res.send("search")
 // })
 
-
 // app.listen(3000,(req,res)=>{
 //     console.log("server...... is running")
 // })
-
-
 
 // let express= require('express')
 // let cors=require('cors')
@@ -167,207 +158,168 @@
 
 // app.get('/search',(req,res)=>{
 //    let {category}=req.query
-   
-    
+
 //       let data=   products.filter((a)=>{
 //             return a.category==category
 //          })
-         
+
 //          if(!data){
 //             return res.status(404).json({msg:"no data"})
 
 //          }
 //          res.status(200).json({msg:data})
-         
-   
 
 // })
-
 
 // app.put('/add',(req,res)=>{
 
 // })
 
-
-
 // app.listen(3000,()=>{
 //     console.log("server.... is running")
 // })
 
-
-
-let express = require('express')
-let app=express()
-const bcryptjs = require("bcryptjs")
-let jwt=require('jsonwebtoken')
+let express = require("express");
+let app = express();
+const bcryptjs = require("bcryptjs");
+let jwt = require("jsonwebtoken");
 const User = require("./DB/db");
-app.use(express.json())
-let mongooes=require('mongoose')
-mongooes.connect("mongodb+srv://aka_ankit:ankit5706@cluster0.vqn6mtv.mongodb.net/vedam").then(()=>{
-  console.log("db connected ........")
-})
+app.use(express.json());
+let mongooes = require("mongoose");
+mongooes
+  .connect(
+    "mongodb+srv://aka_ankit:ankit5706@cluster0.vqn6mtv.mongodb.net/vedam",
+  )
+  .then(() => {
+    console.log("db connected ........");
+  });
 
+app.post("/signUp", async (req, res) => {
+  let { name, email, passWord, role } = req.body;
+  let findData = await User.findOne({ email });
+  console.log(findData, "hjehehe");
+  if (findData) {
+    return res.send("user jinda haii....");
+  } else {
+    let updateddP = await bcryptjs.hash(passWord, 10);
 
+    console.log(updateddP, "dekhoooooo");
 
-app.post("/signUp", async(req,res)=>{
-   let {name,email,passWord ,role}=req.body
-  let findData=   await User.findOne({email})
-  console.log(findData,"hjehehe");
-  if(findData){
-   return res.send("user jinda haii....")
-  }else{
-     let updateddP=   await bcryptjs.hash(passWord,10)
-
-     console.log(updateddP,"dekhoooooo");
-     
- let UserInfo=  new User({
-      name,email,
-      passWord:updateddP,
-      role:role||'user'
-   
-
-   })
-      await UserInfo.save()
-      res.send("done.......")
+    let UserInfo = new User({
+      name,
+      email,
+      passWord: updateddP,
+      role: role || "user",
+    });
+    await UserInfo.save();
+    res.send("done.......");
   }
-})
+});
 
+app.post("/login", async (req, res) => {
+  let { email, passWord } = req.body;
+  let findData = await User.findOne({ email });
+  console.log(findData, "heheh");
 
+  let validP = await bcryptjs.compare(passWord, findData.passWord);
+  if (!validP) {
+    return res.send("kuch nhi ho payega aapse.....");
+  }
 
-app.post('/login', async(req,res)=>{
-   let {email,passWord}=req.body
- let findData=   await User.findOne({email})    
- console.log(findData,"heheh");
+  let token = jwt.sign(
+    { id: findData._id, email: findData.email, role: findData.role },
+    "hehehehehe",
+  );
+  console.log(token, "hehe");
 
- let validP= await   bcryptjs.compare(passWord,findData.passWord)
- if(!validP){
-   return res.send("kuch nhi ho payega aapse.....")
- }
+  res.json({ msg: "done", token: token });
+});
+let auth = (req, res, next) => {
+  let token = req.headers.authorization;
+  console.log(token, "toeknn");
 
-  let token=    jwt.sign({id:findData._id, email:findData.email,role:findData.role},"hehehehehe")
-  console.log(token,"hehe");
+  if (!token) {
+    return res.send("kaun hai app...");
+  }
+  let decode = jwt.verify(token, "hehehehehe");
+  console.log(decode, "isse");
+  req.user = decode;
 
-  
- res.json({msg:"done",token:token})
+  next();
+};
+let roleCheck = (role) => {
+  return (req, res, next) => {
+    if (req.user.role !== role) {
+      return res.send("who the hell are u...........");
+    }
+    // console.log(req.user,"isko dekhoooo");
+    next();
+  };
+};
+app.get("/admin", auth, roleCheck("admin"), (req, res) => {
+  res.send("hello only admin can acces me!");
+});
 
-})
-let auth=(req,res,next)=>{
-   let token=req.headers.authorization;
-   console.log(token,"toeknn");
-   
-   if(!token){
-      return res.send("kaun hai app...")
-   }
-  let decode=  jwt.verify(token,"hehehehehe")
-  console.log(decode,"isse");
-  req.user=decode
+app.post("/forgot-password", async (req, res) => {
+  const { email } = req.body;
+  try {
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).send("User not found");
+    }
 
-  next()
-}
-let roleCheck=(role)=>{
-   return (req,res,next)=>{
-      if(req.user.role!==role){
-         return res.send("who the hell are u...........")
-      }
-      // console.log(req.user,"isko dekhoooo");
-      next()
-   }
-}
-app.get("/admin", auth,roleCheck("admin"),(req,res)=>{
-   res.send("hello only admin can acces me!")
-})
+    const resetToken = crypto.randomBytes(20).toString("hex");
+    user.resetToken = resetToken;
+    user.resetTokenExpiry = Date.now() + 3600000;
+    await user.save();
 
+    const resetUrl = `http://localhost:3000/reset-password/${resetToken}`;
+    await sendEmail(
+      user.email,
+      "Password Reset Request",
+      `Click the link below to reset your password:\n\n${resetUrl}`,
+    );
 
+    res.status(200).send("Password reset email sent");
+  } catch (error) {
+    res
+      .status(500)
+      .send("Error sending password reset email: " + error.message);
+  }
+});
 
-app.post('/forgot-password', async (req, res) => {
-   const { email } = req.body;
-   try {
-     const user = await User.findOne({ email });
-     if (!user) {
-       return res.status(404).send('User not found');
-     }
- 
-   
-     const resetToken = crypto.randomBytes(20).toString('hex');
-     user.resetToken = resetToken;
-     user.resetTokenExpiry = Date.now() + 3600000; 
-     await user.save();
- 
- 
-     const resetUrl = `http://localhost:3000/reset-password/${resetToken}`;
-     await sendEmail(
-       user.email,
-       'Password Reset Request',
-       `Click the link below to reset your password:\n\n${resetUrl}`
-     );
- 
-     res.status(200).send('Password reset email sent');
-   } catch (error) {
-     res.status(500).send('Error sending password reset email: ' + error.message);
-   }
- });
- 
+app.post("/reset-password/:token", async (req, res) => {
+  let { newp } = req.body;
 
- app.post('/reset-password/:token', async(req,res)=>{
-   let {newp}=req.body
+  let { token } = req.params;
 
-   let {token}=req.params
+  let user = await User.findOne({
+    resetToken: token,
+    resetTokenExpiry: { $gt: DataTransfer.now() },
+  });
+  if (!user) {
+    return res.send("invalid password");
+  } else {
+    let updateddP = await bcryptjs.hash(newp, 10);
+    user.password = updateddP;
+    user.resetToken = undefined;
+    user.resetTokenExpiry = undefined;
+    await user.save();
 
-   let user=await User.findOne({
-      resetToken:token,
-      resetTokenExpiry:{$gt: DataTransfer.now()}
-      
-   })
-   if(!user){
-      return res.send("invalid password")
-   }
-   else{
-      let updateddP=await bcryptjs.hash(newp,10)
-      user.password = updateddP;
-      user.resetToken = undefined;
-      user.resetTokenExpiry = undefined;
-      await user.save();
+    return res.send("Password updated successfully");
+  }
+});
+app.get("/error", (req, res) => {
+  try {
+    let name = null;
+    console.log(name.user);
+    console.log("hello ");
+    res.send("hola");
+  } catch (err) {
+    res.send("kuch to gudbad hai bahi", err);
+  }
+});
 
-      return res.send("Password updated successfully");
-
-   }
- })
-app.get('/error',(req,res)=>{
-
- try{
-   let name=null;
-   console.log(name.user)
-   console.log("hello ")
-   res.send("hola")
-
-}
-catch(err){
-   res.send("kuch to gudbad hai bahi",err)
-
-}
-
-})
-
-
-
-
-app.listen(3000,()=>{
-   console.log("server......");
-   
-})
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+app.listen(3000, () => {
+  console.log("server......");
+});
