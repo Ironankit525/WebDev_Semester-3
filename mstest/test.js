@@ -83,6 +83,7 @@ app.get('/items',(req,res)=>{
 app.get('/items/:category',(req,res)=>{
    let {category}= req.params
    let data = products.filter((a) => a.category === category);
+   
 
    if(data.length === 0){
     return res.send('item not found ')
@@ -140,56 +141,47 @@ app.delete('/items/:id',(req,res)=>{
 
 
 app.post('/SignUp',async(req, res)=>{
-    let{name,email,passWord,role}=req.body;
+    let {name,email,passWord,role}=req.body;
 
-    let findData=await User.findOne({email});
+    let emailCheck=await User.findOne({email});
 
-    if(findData){
-        res.send("user already exist");
+    if(emailCheck){
+       return res.status(409).send("user already exists");
     }
-    let hashpass=await bcryptjs.hash(passWord,12);
+     
+    let hasedpass=await bcryptjs.hash(passWord,10);
 
     let userInfo=new User({
-        name,
-        email,
-        passWord:hashpass,
-        role:role||"user"
-
-    });
+        name:name,
+        email:email,
+        passWord:hasedpass,
+        role:role|| "user"
+    })
 
     await userInfo.save();
-    res.send("user created");
 
-    
-
+    res.send("account created successfully");
 })
 
 
 app.post('/login',async(req,res)=>{
-    let{email,passWord}=req.body
+   let{name,email,password}=req.body;
+   let data = await User.findOne({email});
+   if(!data){
+    return 
+   }
+   let hashp=await bcryptjs.compare(password,data.password);
+   if(!hashp){
 
-    let findData=await User.findOne({email});
+   }
+   let token = jwt.sign({name:data.name,email:data.email},"secreatkey");
+   res.status(200).json({token:token})
 
-    if(!findData){
-        return res.send("user not found");
-    }
-
-    let validpass=bcryptjs.compare(passWord,findData.passWord);
-
-    if(!validpass){
-        return res.send("password is wrong");
-    }
-
-    let token=jwt.sign(
-        {id:findData.id,email:findData.email,passWord:findData.passWord},"mySecretKey"
-    )
-
-    res.json({ msg: "Login successful", token: token });
-})
+});
 
 let auth=(req,res,next)=>{
     let token=req.headers.authorization;
-
+    
     if(!token){
         return res.send("token is not given ")
     }
@@ -202,6 +194,9 @@ let auth=(req,res,next)=>{
         res.send(err);
     }
 }
+
+
+//
 
 
 let roleCheck=(role)=>{
@@ -283,4 +278,3 @@ res.send("Password reset successful");
 app.listen(3000,()=>{
     console.log('server is started..........')
 })
-
