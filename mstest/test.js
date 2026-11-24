@@ -56,9 +56,9 @@ app.get('/product:id',(req,res)=>{
 })
 
 app.get('/search',(req,res)=>{
-    
+    let {search}=req.query;
     console.log(req.query);
-    res.send("ok")
+    res.send(req.query)
 })
 
 app.use(express.json());
@@ -76,7 +76,7 @@ let products = [
 ]
 
 app.get('/items',(req,res)=>{
-    res.json({data:products});
+    res.json({ankit:products});
 })
 
 
@@ -95,8 +95,8 @@ app.get('/items/:category',(req,res)=>{
 
 
 app.post('/items',(req,res)=>{
-    let obj={...req.body};
-    products.push(obj);
+    // let obj={...req.body};
+    products.push(...req.body);
     res.send(obj);
 })
 
